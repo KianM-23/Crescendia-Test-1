@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { recipeSelect } from "./recipeSlice";
 import { isEmpty } from "lodash";
 import NavBar from "../../components/NavBar";
+import {
+  getIngredients,
+  ingredientSelect,
+} from "../ingredient/ingredientSlice";
+import Specials from "./Specials";
 
 function RecipeDetails({ match }) {
+  const dispatch = useDispatch();
   const { recipes } = useSelector(recipeSelect);
   const [recipe, setRecipe] = useState({});
 
   const { id } = match.params;
-  console.log(recipe);
-  console.log(id);
+
   useEffect(() => {
     setRecipe(recipes.find((recipe) => recipe.uuid === id));
   }, [id, recipes]);
@@ -21,7 +26,7 @@ function RecipeDetails({ match }) {
         <div className="max-w-6xl mx-auto bg-gray-100 bg-opacity-75 shadow-sm ">
           {!isEmpty(recipe) && (
             <div className="p-4">
-              <div className="w-full my-6 text-4xl text-center bg-red-400 border">
+              <div className="w-full my-6 text-4xl text-center border">
                 {recipe.title}
               </div>
               <div className="flex items-center justify-center h-full max-w-6xl mx-auto rounded-t-2xl">
@@ -40,7 +45,7 @@ function RecipeDetails({ match }) {
                 </div>
                 <div className="flex flex-col h-20 font-semibold border-b border-l">
                   <p className="p-2">SERVING TIME</p>
-                  <spam className="p-2">{recipe.servings}</spam>
+                  <span className="p-2">{recipe.servings}</span>
                 </div>
                 <div className="flex flex-col h-20 font-semibold border-b border-l">
                   <p className="p-2">COOK TIME</p>
@@ -62,7 +67,7 @@ function RecipeDetails({ match }) {
                 <h2 className="mb-6 text-3xl font-semibold text-center">
                   INGREDIENTS
                 </h2>
-                <div className="grid h-64 grid-flow-col grid-rows-5 gap-4 font-medium">
+                <div className="font-medium ">
                   {recipe.ingredients &&
                     recipe.ingredients.map((ingredient) => {
                       return (
@@ -77,9 +82,12 @@ function RecipeDetails({ match }) {
                                 className="w-6 h-6 checked:bg-red-500 checked:border-transparent"
                               />
                             </div>
-                            <div>{` ${ingredient.name} ${ingredient.amount} ${ingredient.measurement}`}</div>
+                            <div className="font-semibold uppercase">{` ${ingredient.name} ${ingredient.amount} ${ingredient.measurement}`}</div>
                           </div>
                           <hr className="border" />
+                          <div className="my-2 ml-5 text-xs italic font-semibold tracking-wide uppercase">
+                            <Specials id={ingredient.uuid} />
+                          </div>
                         </div>
                       );
                     })}

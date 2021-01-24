@@ -2,6 +2,7 @@ import { isEmpty } from "lodash";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getIngredients } from "../ingredient/ingredientSlice";
 import { getRecipes, recipeSelect } from "./recipeSlice";
 
 function RecipeList({ match }) {
@@ -9,8 +10,8 @@ function RecipeList({ match }) {
   const { recipes } = useSelector(recipeSelect);
   useEffect(() => {
     dispatch(getRecipes());
+    dispatch(getIngredients());
   }, [dispatch]);
-  console.log(recipes);
   return (
     <div className="py-4">
       <div className="grid max-w-6xl grid-cols-2 mx-auto bg-gray-100 bg-opacity-75">
